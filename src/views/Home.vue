@@ -1,15 +1,18 @@
 <script>
+import { RouterLink, RouterView } from 'vue-router'
 export default{
+    components:{
+        RouterLink, 
+        RouterView,
+    },
     data(){
         return{
             startTime:"",
             endTime:"",
             titleSerach:"",
-            testArr:[1,2,3,1,2,3,1,2,3,1,2,3,1,2,3],
+            testArr:[],
             showData:10,
             dataPage:1,
-
-
         }
     },
     methods:{
@@ -32,6 +35,52 @@ export default{
             this.dataPage++;
             } 
         },
+        surveys(){
+            let xx = {
+                "survey_id": 0,
+            }
+            fetch("http://localhost:8080/all_Survey", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(xx)
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    this.testArr = data;
+                    console.log(this.testArr)
+                })
+                .then(function (error) {
+                    console.log(error);
+                })
+        },
+        addAns(id){
+            let pk = {
+                "survey_id": id,
+            }
+            console.log(id)
+            fetch("http://localhost:8080/get_Survey", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(pk)
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    sessionStorage.setItem("Item",JSON.stringify(data));
+                })
+                .then(function (error) {
+                    console.log(error);
+                })
+        }
     },
     computed:{
         totalPages() {
@@ -42,6 +91,12 @@ export default{
         const endIndex = startIndex + this.showData;
         return this.testArr.slice(startIndex, endIndex);
     },
+    },
+    created(){
+        this.surveys();
+    },
+    updated(){
+        
     }
 }
 </script>
@@ -70,16 +125,23 @@ export default{
     <div class="contentList">
         <div class="totalList ">
             <div class="listTitle">
-                <span class="span1">#</span>
-                <span class="span1">問卷</span>
-                <span class="span1">狀態</span>
-                <span class="span1">開始時間</span>
-                <span class="span1">結束時間</span>
+                <span class="Num">#</span>
+                <span class="Title">問卷</span>
+                <span class="Condition">狀態</span>
+                <span class="Time">開始時間</span>
+                <span class="Time">結束時間</span>
                 <span class="spanLast">觀看統計</span>
             </div>
-            <div class="listContent" v-for="(item, index) in currentPageItems" :key="index">
-                {{ item }}
-            </div>
+            <div class="dataContent">
+                    <div class="listContent" v-for="(item, index) in currentPageItems" :key="index">
+                        <span class="Num2">{{ item.surveyId }}</span>
+                        <RouterLink to='/userFn' @click="addAns(item.surveyId)" class="Title2"><span  >{{ item.surveyTitle }}</span></RouterLink>
+                        <span class="Condition2">{{ item.surveyCondition }}</span>
+                        <span class="Time2">{{ item.surveyStartTime }}</span>
+                        <span class="Time2">{{ item.surveyEndTime }}</span>
+                        <span class="spanLast2">觀看統計</span>
+                    </div>
+                </div>
             <div class="listBtn">
                 <button @click="previousPage" :disabled="currentPage === 1">上一頁</button>
                 <button @click="nextPage" :disabled="currentPage === totalPages">下一頁</button>
@@ -192,38 +254,109 @@ export default{
             flex-direction: column;
             position: relative;
 
-            .listTitle{
+            .listTitle {
                 position: absolute;
-                top:0;
+                top: 0;
                 width: 100%;
-                height: 4vh;
-                font-size: 16pt;
+                height: 6vh;
+                font-size: 20pt;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 background-color: #dddddd;
-                
-                .span1{
-                    width: 15%;
+
+                .Num {
+                    width: 5%;
                     padding-left: 6px;
                     height: 4vh;
                     border-right: 3px solid black;
-                    
+                    ;
                 }
-                .spanLast{
+
+                .Title {
+                    width: 50%;
+                    padding-left: 6px;
+                    height: 4vh;
+                    border-right: 3px solid black;
+                    text-align: center;
+                }
+
+                .Condition {
                     width: 10%;
+                    padding-left: 6px;
+                    height: 4vh;
+                    border-right: 3px solid black;
+                }
+
+                .Time {
+                    width: 10%;
+                    padding-left: 6px;
+                    height: 4vh;
+                    border-right: 3px solid black;
+                }
+
+                .spanLast {
+                    width: 15%;
                     height: 4vh;
                     padding-left: 6px;
-                    
+
                 }
             }
 
-            .listContent{
-                height: 4vh;
+            .dataContent {
+                position: absolute;
+                top: 6vh;
+                height: 62vh;
                 width: 100%;
-                background-color: antiquewhite;
-                border: 1px solid black;
-                margin: 2px;
+
+                .listContent {
+                    height: 5.5vh;
+                    width: 100%;
+                    background-color: antiquewhite;
+                    margin-bottom: 5px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .Num2 {
+                        width: 5%;
+                        padding-left: 6px;
+                        height: 4vh;
+                        border-right: 3px solid black;
+                        ;
+                    }
+
+                    .Title2 {
+                        width: 50%;
+                        padding-left: 6px;
+                        height: 4vh;
+                        border-right: 3px solid black;
+                        ;
+                    }
+
+                    .Condition2 {
+                        width: 10%;
+                        padding-left: 6px;
+                        height: 4vh;
+                        border-right: 3px solid black;
+                        ;
+                    }
+
+                    .Time2 {
+                        width: 10%;
+                        padding-left: 6px;
+                        height: 4vh;
+                        border-right: 3px solid black;
+                        ;
+                    }
+
+                    .spanLast2 {
+                        width: 15%;
+                        height: 4vh;
+                        padding-left: 6px;
+                    }
+
+                }
             }
 
             .listBtn{
