@@ -1,6 +1,21 @@
 <script>
 export default{
-    
+    data(){
+        return{
+
+        }
+    },
+    methods:{
+        goBack(){
+            this.$router.go(-1);
+        },
+        goNext(){
+            this.$router.go(+1);
+        },
+        goHome(){
+            this.$router.push('/')
+        }
+    }
 }
 
 </script>
@@ -14,16 +29,16 @@ export default{
     <div class="btnsArea">
         <!-- 目的在於背景顯白 -->
         <div class="team">
-            <i class="fa-sharp fa-solid fa-circle-arrow-left"></i>
-            <i class="fa-sharp fa-solid fa-circle-arrow-right"></i>
+            <i class="fa-sharp fa-solid fa-circle-arrow-left" @click="goBack"></i>
+            <i class="fa-sharp fa-solid fa-circle-arrow-right" @click="goNext"></i>
             <i class="fa-sharp fa-solid fa-xmark"></i>
-            <i class="fa-sharp fa-solid fa-house"></i>
+            <i class="fa-sharp fa-solid fa-house" @click="goHome"></i>
         </div>
     </div>
     <!-- 上方偽網址區 -->
     <div class="showTitle">
         <div class="fakeUrl">
-            <span>這是人豪的問卷調查系統</span>
+            <span>這是人豪的問卷調查系統前台</span>
         </div>
     </div>
     <!-- 偽搜尋按鈕 -->

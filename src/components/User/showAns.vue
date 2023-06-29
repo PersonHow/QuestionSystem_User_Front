@@ -2,9 +2,11 @@
 export default {
     data() {
         return {
-            selectText: "",
-            selectRadio: "",
-            selectCheck: "",
+            0: '',
+            1: '',
+            2: '',
+            3: '',
+            4: ''
         }
     },
     props: [
@@ -16,18 +18,22 @@ export default {
         'userPhone',
         'userEmail',
         'userAge',
-        'textInput',
-        'radioInput',
-        'checkInput',
+        'userAns1',
+        'userAns2',
+        'userAns3',
+        'userAns4',
+        'userAns0',
     ],
     methods: {
 
     },
     created() {
-        this.selectText = this.textInput;
-        this.selectRadio = this.radioInput;
-        this.selectCheck = this.checkInput;
-    },
+        this[0] = this.userAns0;
+        this[1] = this.userAns1;
+        this[2] = this.userAns2;
+        this[3] = this.userAns3;
+        this[4] = this.userAns4;
+    }
 }
 
 </script>
@@ -69,12 +75,12 @@ export default {
             <div class="selectArea">
                 <div class="selected" v-for="(elements, index) in surveySelected" :key="index">
                     <div class="input">
-                        <input type="text" name="" id="" class="textIn" v-if="elements.includes('文字')"
-                            v-model="this.selectText" disabled>
+                        <input type="text" name="" id="" class="textIn" v-if="elements.includes('文字')" v-model=this[index]
+                            disabled>
                         <span name="radioName" :id="'radioIn' + [index]"
-                            v-if="this.radioInput !== '' && elements.includes('單選')" :key="index">{{ selectRadio }}</span>
-                        <span name="checkName" id="checkIn" v-if="this.checkInput !== '' && elements.includes('複選')"
-                            :key="index">{{ selectCheck }}</span>
+                            v-if="this[index] !== '' && elements.includes('單選')" :key="index">{{ this[index] }}</span>
+                        <span name="checkName" id="checkIn" v-if="this[index] !== '' && elements.includes('複選')"
+                            :key="index">{{ this[index] }}</span>
                     </div>
 
                 </div>
@@ -84,7 +90,7 @@ export default {
         </div>
         <div class="sumbitBtn">
             <button class="btn cancel" @click="$emit('backPage')">取消</button>
-            <button class="btn comfrim" @click="">送出</button>
+            <button class="btn comfrim" @click="$emit('sentInfo')">送出</button>
         </div>
     </div>
 </template>
@@ -172,7 +178,7 @@ export default {
     }
 
     .userAns {
-        width: 100%;
+        width: 90%;
         height: 25vh;
         display: flex;
         justify-content: space-around;
@@ -195,7 +201,7 @@ export default {
         }
 
         .selectArea {
-            width: 100%;
+            width: 90%;
             height: 20vh;
             display: flex;
             justify-content: space-around;
@@ -276,4 +282,5 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>

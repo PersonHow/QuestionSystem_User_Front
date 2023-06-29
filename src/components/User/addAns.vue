@@ -1,9 +1,8 @@
 <script>
-import showAns from '../User/showAns.vue';
 export default {
     data() {
         return {
-            checkInput:"",
+            checkInput: "",
         }
     },
     props: [
@@ -15,26 +14,29 @@ export default {
         'userPhone',
         'userEmail',
         'userAge',
-        'textInput',
-        'radioInput',
-        'checkInput',
+        'userAns1',
+        'userAns2',
+        'userAns3',
+        'userAns4',
+        'userAns0',
     ],
     methods: {
-        checkRes(xxx) {
-            if(this.checkInput == ""){
+        checkRes(xxx, index) {
+            // console.log(index)
+            if (this.checkInput == "") {
                 this.checkInput += xxx;
             }
             if (!this.checkInput.includes(xxx)) {
-                this.checkInput = this.checkInput.concat(",",xxx)
+                this.checkInput = this.checkInput.concat(",", xxx)
             }
-            this.$emit('update:checkInput', this.checkInput)
+            this.$emit("update:userAns" + index, this.checkInput)
             console.log(this.checkInput);
         },
         cancel() {
             this.$router.push('/')
-            
+
         },
-        
+
     },
     created() {
 
@@ -83,14 +85,13 @@ export default {
             <div class="selectArea">
                 <div class="selected" v-for="(elements, index) in surveySelected" :key="index">
                     <div class="input">
-                        <input type="text" name="" id="" class="textIn" v-if="elements.includes('文字')" :value="textInput"
-                            @input="$emit('update:textInput', $event.target.value)">
+                        <input type="text" name="" id="" class="textIn" v-if="elements.includes('文字')"
+                            @input="$emit(`update:userAns${[index]}`, $event.target.value)">
                         <input type="Radio" name="radioName" :id="'radioIn' + [index]" v-if="elements.includes('單選方塊')"
-                            v-for="(xxx, index) in elements.split(',')[2].split(';')" :key="index" :value="xxx"
-                            @change="$emit('update:radioInput', $event.target.value)">
+                            v-for="(xxx) in elements.split(',')[2].split(';')" :value="xxx"
+                            @change="$emit(`update:userAns${[index]}`, $event.target.value)">
                         <input type="checkbox" name="checkName" id="checkIn" v-if="elements.includes('複選方塊')"
-                            v-for="(xxx, index) in elements.split(',')[2].split(';')" :key="index" :value="xxx"
-                            @change="checkRes(xxx)">
+                            v-for="(xxx) in elements.split(',')[2].split(';')" :value="xxx" @change="checkRes(xxx, index)">
                     </div>
                     <div class="res">
                         <span v-for="xxx in elements.split(',')[2].split(';')">{{ xxx }}</span>
@@ -197,45 +198,52 @@ export default {
         justify-content: space-around;
         align-items: center;
         flex-direction: column;
-        overflow: auto;
+        margin-bottom: 10px;
+        // overflow: auto;
 
         .queArea {
-            width: 100%;
+            width: 90%;
             height: 5vh;
             display: flex;
             justify-content: space-around;
-        }
+            // overflow: auto;
 
-        .question {
-            width: 20%;
-            font-size: 16pt;
-            font-weight: bolder;
 
+            .question {
+                width: 30%;
+                height: 5vh;
+                font-size: 16pt;
+                font-weight: bolder;
+            }
         }
 
         .selectArea {
-            width: 100%;
+            width: 90%;
             height: 20vh;
             display: flex;
             justify-content: space-around;
-            overflow: auto;
+            // overflow: auto;
 
             span {
                 font-size: 16pt;
             }
 
             .selected {
-                height: 15vh;
-                width: 20%;
+                height: 20vh;
+                width: 30%;
                 font-size: 12pt;
                 display: flex;
+                // overflow: auto;
+                // justify-content: space-around;
+                // align-items: center;
+                
 
                 .input {
-                    width: 50%;
-                    height: 15vh;
+                    width: 100%;
+                    height: 20vh;
                     display: flex;
                     justify-content: space-around;
-                    align-items: start;
+                    align-items: center;
                     flex-direction: column;
 
                     .textIn {
@@ -245,12 +253,21 @@ export default {
                 }
 
                 .res {
-                    width: 50%;
-                    height: 15vh;
+                    width: 100%;
+                    height: 20vh;
                     display: flex;
                     justify-content: space-around;
                     align-items: start;
                     flex-direction: column;
+
+                    span {
+                        font-size: 12pt;
+                        height: 5vh;
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: start;
+                        flex-direction: column;
+                    }
                 }
             }
         }

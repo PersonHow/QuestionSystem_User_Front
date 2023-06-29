@@ -12,7 +12,7 @@ const router = createRouter({
     {
       path:'/userFn',
       name:'userFn',
-      component:() => import('../components/total/userFn.vue')
+      component:() => import('../components/total/userFn.vue'),
     }
   ]
 })
